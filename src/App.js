@@ -1,20 +1,19 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import pencil from './pencil.svg';
+import style from './App.css';
 import Injected from '../example/Hello.js';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <Injected />
-      </div>
-    );
-  }
-}
+const App = () => (
+  <div className={style.app}>
+    <h1 className={style.header}>
+			React
+      <img className={style.logo} height="80px" src={pencil} />
+			Sketchbook
+    </h1>
+    <div className={style.container}>
+      <Injected />
+    </div>
+  </div>
+);
 
 export default App;
