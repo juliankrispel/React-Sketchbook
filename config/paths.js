@@ -1,9 +1,14 @@
 var path = require('path');
+var findParentDir = require('find-parent-dir');
+var filePath = process.argv[2];
 
-const filePath = process.argv[2];
 if (!filePath) {
   throw new Error('you need to define a path to the component that you want to mount');
 }
+
+var dynamicNodeModulesFolder = findParentDir(path.dirname(filePath), 'node_modules', () => {
+  console.log('no node_modules found in directory');
+});
 
 // We support resolving modules according to `NODE_PATH`.
 // This lets you use absolute paths in imports inside large monorepos:
@@ -21,9 +26,11 @@ var nodePaths = (process.env.NODE_PATH || '')
   .filter(Boolean)
   .map(p => path.resolve(p));
 
-function resolveApp(relativePath) {
-  return path.resolve(relativePath);
-}
+const resolveApp = (relativePath) => !relativePath ? relativePath : path.resolve(relativePath);
+var dynamicFolder = resolveApp(dynamicNodeModulesFolder);
+dynamicFolder = dynamicFolder ? [dynamicFolder] : [];
+
+console.log('node paths', nodePaths.concat([resolveApp('node_modules')]).concat(dynamicFolder));
 
 // config after eject: we're in ./config/
 module.exports = {
@@ -34,5 +41,6 @@ module.exports = {
   testsSetup: resolveApp('src/setupTests.js'),
   appNodeModules: resolveApp('node_modules'),
   ownNodeModules: resolveApp('node_modules'),
-  nodePaths: nodePaths
+  dynamicNodeModules: dynamicFolder,
+  nodePaths: nodePaths.concat([resolveApp('node_modules')]).concat(dynamicFolder)
 };

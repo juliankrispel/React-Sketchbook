@@ -3,15 +3,17 @@ var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var WatchMissingNodeModulesPlugin = require('../scripts/utils/WatchMissingNodeModulesPlugin');
 var paths = require('./paths');
 var env = require('./env');
+var filePath = process.argv[2];
 
-const filePath = process.argv[2];
+console.log('own node modules', paths.ownNodeModules);
+
 if (!filePath) {
   throw new Error('you need to define a path to the component that you want to mount');
 }
-
 
 // This is the development configuration.
 // It is focused on developer experience and fast rebuilds.
@@ -79,7 +81,7 @@ module.exports = {
   // You can remove this after ejecting.
   resolveLoader: {
     root: paths.ownNodeModules,
-    moduleTemplates: ['*-loader'],
+    moduleTemplates: ['*-loader', ''],
   },
   module: {
     // First, run the linter.
@@ -91,7 +93,21 @@ module.exports = {
         include: paths.appSrc,
       }
     ],
+
     loaders: [
+      // "postcss" loader applies autoprefixer to our CSS.
+      // "css" loader resolves paths in CSS and adds assets as dependencies.
+      // "style" loader turns CSS into JS modules that inject <style> tags.
+      // In production, we use a plugin to extract that CSS to a file, but
+      // in development "style" loader enables hot editing of CSS.
+      {
+        test: /\.css$/,
+        loader: ExtractTextPlugin.extract(
+          'style',
+          'css?modules&sourceMap&importLoaders=1&localIdentName=[local]___[hash:base64:5]'
+        ),
+      },
+
       // Process JS with Babel.
       {
         test: /\.(js|jsx)$/,
@@ -102,21 +118,14 @@ module.exports = {
         loader: 'babel',
         query: require('./babel.dev')
       },
-      // "postcss" loader applies autoprefixer to our CSS.
-      // "css" loader resolves paths in CSS and adds assets as dependencies.
-      // "style" loader turns CSS into JS modules that inject <style> tags.
-      // In production, we use a plugin to extract that CSS to a file, but
-      // in development "style" loader enables hot editing of CSS.
-      {
-        test: /\.css$/,
-        loader: 'style!css!postcss'
-      },
+
       // JSON is not enabled by default in Webpack but both Node and Browserify
       // allow it implicitly so we also enable it.
       {
         test: /\.json$/,
         loader: 'json'
       },
+
       // "file" loader makes sure those assets get served by WebpackDevServer.
       // When you `import` an asset, you get its (virtual) filename.
       // In production, they would get copied to the `build` folder.
@@ -128,6 +137,7 @@ module.exports = {
           name: 'static/media/[name].[hash:8].[ext]'
         }
       },
+
       // A special case for favicon.ico to place it into build root directory.
       {
         test: /\/favicon.ico$/,
@@ -137,6 +147,7 @@ module.exports = {
           name: 'favicon.ico?[hash:8]'
         }
       },
+
       // "url" loader works just like "file" loader but it also embeds
       // assets smaller than specified size as data URLs to avoid requests.
       {
@@ -147,6 +158,7 @@ module.exports = {
           name: 'static/media/[name].[hash:8].[ext]'
         }
       },
+
       // "html" loader is used to process template page (index.html) to resolve
       // resources linked with <link href="./relative/path"> HTML tags.
       {
@@ -195,6 +207,8 @@ module.exports = {
     // to restart the development server for Webpack to discover it. This plugin
     // makes the discovery automatic so you don't have to restart.
     // See https://github.com/facebookincubator/create-react-app/issues/186
-    new WatchMissingNodeModulesPlugin(paths.appNodeModules)
+    new WatchMissingNodeModulesPlugin(paths.appNodeModules),
+
+    new ExtractTextPlugin('modules.css', { allChunks: false }),
   ]
 };
