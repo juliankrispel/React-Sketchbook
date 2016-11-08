@@ -1,7 +1,9 @@
 {
-  "name": "hello-world",
+  "name": "react-sketchbook",
   "version": "0.1.0",
-  "private": true,
+  "bin": {
+    "sketchbook": "scripts/start.js"
+  },
   "devDependencies": {
     "autoprefixer": "6.4.0",
     "babel-core": "6.14.0",

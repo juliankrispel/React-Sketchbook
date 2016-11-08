@@ -3,8 +3,6 @@ import Toggle from 'react-toggle';
 import 'react-toggle/style.css';
 import style from './style.css';
 
-console.log('styyyyyyle', style);
-
 const Example = () => (
   <div className={style.container}>
     <Toggle

@@ -6,8 +6,9 @@ import Injected from '<<<moduleFileName>>>';
 const App = () => (
   <div className={style.app}>
     <h1 className={style.header}>
-      <img height="75px" src={pencil} />
-      Sketchbook
+			React
+      <img className={style.logo} height="80px" src={pencil} />
+			Sketchbook
     </h1>
     <div className={style.container}>
       <Injected />

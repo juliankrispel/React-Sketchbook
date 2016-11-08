@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import pencil from './pencil.svg';
 import style from './App.css';
 import Injected from '../example/Hello.js';
@@ -7,7 +7,7 @@ const App = () => (
   <div className={style.app}>
     <h1 className={style.header}>
 			React
-      <img className={style.logo} height="80px" src={pencil} />
+      <img className={style.logo} src={pencil} />
 			Sketchbook
     </h1>
     <div className={style.container}>
