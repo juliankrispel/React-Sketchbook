@@ -2,6 +2,9 @@
   "name": "react-sketchbook",
   "version": "0.1.0",
 	"main": "scripts/start.js",
+	"bin": {
+		"sketchbook": "bin/sketchbook.js"
+	},
   "dependencies": {
     "autoprefixer": "6.4.0",
     "babel-core": "6.14.0",
