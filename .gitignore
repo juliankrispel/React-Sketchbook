@@ -2,6 +2,8 @@
 
 # dependencies
 node_modules
+bin
+tmp
 
 # testing
 coverage
