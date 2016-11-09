@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { Component } from 'react';
 import pencil from './pencil.svg';
 import style from './App.css';
-import Injected from '../example/Hello.js';
+import Injected from '../../regenwald/src/app/components/Settings/__story__/index.js';
 
 const App = () => (
   <div className={style.app}>
     <h1 className={style.header}>
 			React
-      <img className={style.logo} src={pencil} />
+      <img className={style.logo} height="80px" src={pencil} />
 			Sketchbook
     </h1>
     <div className={style.container}>

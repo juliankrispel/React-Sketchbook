@@ -7,11 +7,10 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var WatchMissingNodeModulesPlugin = require('../scripts/utils/WatchMissingNodeModulesPlugin');
 var paths = require('./paths');
 var env = require('./env');
-var filePath = process.argv[2];
 
 console.log('own node modules', paths.ownNodeModules);
 
-if (!filePath) {
+if (!global.moduleFilePath) {
   throw new Error('you need to define a path to the component that you want to mount');
 }
 
@@ -84,17 +83,15 @@ module.exports = {
     moduleTemplates: ['*-loader', ''],
   },
   module: {
-    // First, run the linter.
-    // It's important to do this before Babel processes the JS.
-    preLoaders: [
+    loaders: [
+      // Process JS with Babel.
       {
         test: /\.(js|jsx)$/,
-        loader: 'eslint',
-        include: paths.appSrc,
-      }
-    ],
+        include: paths.moduleSrc,
+        loader: 'babel',
+        query: require('./babel.dev')
+      },
 
-    loaders: [
       // "postcss" loader applies autoprefixer to our CSS.
       // "css" loader resolves paths in CSS and adds assets as dependencies.
       // "style" loader turns CSS into JS modules that inject <style> tags.
@@ -106,17 +103,6 @@ module.exports = {
           'style',
           'css?modules&sourceMap&importLoaders=1&localIdentName=[local]___[hash:base64:5]'
         ),
-      },
-
-      // Process JS with Babel.
-      {
-        test: /\.(js|jsx)$/,
-        include: [
-          paths.appSrc,
-          path.resolve(path.dirname(filePath))
-        ],
-        loader: 'babel',
-        query: require('./babel.dev')
       },
 
       // JSON is not enabled by default in Webpack but both Node and Browserify

@@ -1,9 +1,8 @@
 process.env.NODE_ENV = 'development';
-module.exports = function() {
 
+module.exports = function() {
   var path = require('path');
   var chalk = require('chalk');
-  var compileTemplate = require('./compileTemplate');
   var webpack = require('webpack');
   var WebpackDevServer = require('webpack-dev-server');
   var historyApiFallback = require('connect-history-api-fallback');
@@ -14,8 +13,6 @@ module.exports = function() {
   var prompt = require('./utils/prompt');
   var config = require('../config/webpack.config.dev');
   var paths = require('../config/paths');
-
-  compileTemplate();
 
   // Tools like Cloud9 rely on this.
   var DEFAULT_PORT = process.env.PORT || 3000;

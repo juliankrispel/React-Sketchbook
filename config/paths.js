@@ -1,12 +1,11 @@
 var path = require('path');
 var findParentDir = require('find-parent-dir');
-var filePath = process.argv[2];
 
-if (!filePath) {
+if (!global.moduleFilePath) {
   throw new Error('you need to define a path to the component that you want to mount');
 }
 
-var dynamicNodeModulesFolder = findParentDir(path.dirname(filePath), 'node_modules', () => {
+var dynamicNodeModulesFolder = findParentDir(path.dirname(global.moduleFilePath), 'node_modules', () => {
   console.log('no node_modules found in directory');
 });
 
@@ -30,17 +29,20 @@ const resolveApp = (relativePath) => !relativePath ? relativePath : path.resolve
 var dynamicFolder = resolveApp(dynamicNodeModulesFolder);
 dynamicFolder = dynamicFolder ? [dynamicFolder] : [];
 
-console.log('node paths', nodePaths.concat([resolveApp('node_modules')]).concat(dynamicFolder));
+const resolveInternal = (relativePath) => path.resolve(__dirname, '../' + relativePath);
 
 // config after eject: we're in ./config/
 module.exports = {
-  appBuild: resolveApp('build'),
-  appHtml: resolveApp('index.html'),
-  appPackageJson: resolveApp('package.json'),
-  appSrc: resolveApp('src'),
+  appBuild: resolveInternal('build'),
+  appHtml: resolveInternal('index.html'),
+  appPackageJson: resolveInternal('package.json'),
+  appSrc: resolveInternal('src'),
+  moduleSrc: 
+    [resolveInternal('src')]
+    .concat(global.extraNodePaths || [])
+    .concat([path.resolve(path.dirname(global.moduleFilePath))]),
   testsSetup: resolveApp('src/setupTests.js'),
-  appNodeModules: resolveApp('node_modules'),
-  ownNodeModules: resolveApp('node_modules'),
-  dynamicNodeModules: dynamicFolder,
-  nodePaths: nodePaths.concat([resolveApp('node_modules')]).concat(dynamicFolder)
+  appNodeModules: resolveInternal('node_modules'),
+  ownNodeModules: resolveInternal('node_modules'),
+  nodePaths: nodePaths.concat(global.extraNodePaths || []).concat([resolveApp('node_modules')]).concat(dynamicFolder)
 };

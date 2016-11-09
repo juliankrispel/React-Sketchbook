@@ -1,14 +1,15 @@
 var fs = require('fs');
 var path = require('path');
 
-var compileTemplate = function() {
-  var filePath = process.argv[2];
-  if (!filePath) {
+module.exports = function() {
+  if (!global.moduleFilePath) {
     throw new Error('you need to define a path to the component that you want to mount');
   }
 
   var templatePath = path.resolve(__dirname, '../src/_App.js');
   var outputPath = path.resolve(__dirname, '../src/App.js');
+  console.log('template path', templatePath);
+  console.log('output path', outputPath);
   var fileReg = /<<<moduleFileName>>>/gi;
   var moduleReg = /<<<moduleName>>>/gi;
 
@@ -16,10 +17,6 @@ var compileTemplate = function() {
     outputPath,
     fs.readFileSync(templatePath)
     .toString()
-    .replace(fileReg, path.relative(__dirname, path.resolve(process.cwd(), filePath)))
+    .replace(fileReg, path.relative(__dirname, path.resolve(process.cwd(), global.moduleFilePath)))
   );
 };
-
-compileTemplate();
-
-module.exports = compileTemplate;
