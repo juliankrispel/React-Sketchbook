@@ -1,3 +1,4 @@
 # React sketchbook
 
-Just started this, it's early days come back in a month.
+Right. So. This is pretty alpha right now. But pretty awesome.
+

@@ -37,6 +37,7 @@ program
   .description(description)
   .usage('<module> [options]')
   .option('-p, --paths <paths>', 'paths added to NODE_PATH - separate with comma', list)
+  .option('-c, --css <css-files>', 'Css files added to frame - separate with comma', list)
   .option('-f, --frameless', 'renders the staging without a container')
   .parse(process.argv);
 

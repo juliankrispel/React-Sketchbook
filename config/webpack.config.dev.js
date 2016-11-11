@@ -1,14 +1,13 @@
 var path = require('path');
 var autoprefixer = require('autoprefixer');
 var webpack = require('webpack');
+var modulesValues = require('postcss-modules-values');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var WatchMissingNodeModulesPlugin = require('../scripts/utils/WatchMissingNodeModulesPlugin');
 var paths = require('./paths');
 var env = require('./env');
-
-console.log('own node modules', paths.ownNodeModules);
 
 if (!global.moduleFilePath) {
   throw new Error('you need to define a path to the component that you want to mount');
@@ -87,7 +86,6 @@ module.exports = {
       // Process JS with Babel.
       {
         test: /\.(js|jsx)$/,
-        include: paths.moduleSrc,
         loader: 'babel',
         query: require('./babel.dev')
       },
@@ -101,7 +99,7 @@ module.exports = {
         test: /\.css$/,
         loader: ExtractTextPlugin.extract(
           'style',
-          'css?modules&sourceMap&importLoaders=1&localIdentName=[local]___[hash:base64:5]'
+          'css?modules&sourceMap&importLoaders=1&localIdentName=[local]___[hash:base64:5]!postcss'
         ),
       },
 
@@ -162,18 +160,17 @@ module.exports = {
     useEslintrc: false
   },
   // We use PostCSS for autoprefixing only.
-  postcss: function() {
-    return [
-      autoprefixer({
-        browsers: [
-          '>1%',
-          'last 4 versions',
-          'Firefox ESR',
-          'not ie < 9', // React doesn't support IE8 anyway
-        ]
-      }),
-    ];
-  },
+  postcss: [
+    modulesValues,
+    autoprefixer({
+      browsers: [
+        '>1%',
+        'last 4 versions',
+        'Firefox ESR',
+        'not ie < 9', // React doesn't support IE8 anyway
+      ]
+    }),
+  ],
   plugins: [
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({

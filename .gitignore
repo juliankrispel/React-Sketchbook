@@ -3,6 +3,7 @@
 # dependencies
 node_modules
 tmp
+src/App.js
 
 # testing
 coverage

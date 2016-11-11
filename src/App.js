@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import pencil from './pencil.svg';
 import style from './App.css';
-import Injected from '../../regenwald/src/app/components/Settings/__story__/index.js';
+import Injected from '../../regenwald/src/ui/__example__/all-components.js';
 
 const App = () => (
   <div className={style.app}>
