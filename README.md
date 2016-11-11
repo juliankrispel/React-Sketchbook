@@ -2,7 +2,7 @@
 
 Early stage CLI tool for staging react components with a zero config webpack dev server (based on create-react-app).
 
-- Based off of create-react-app with added support for css modules
+- Based off of create-react-app with added support for __css modules__
 - Currently the tool does nothing else than mount the default 
 
 ## Install with npm
